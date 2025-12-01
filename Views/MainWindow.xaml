@@ -33,7 +33,7 @@
                 </ListView.View>
             </ListView>
             <Button Content="Edit" 
-                    Command="{Binding DataContext.EditPersonCommand,
+                    Command="{Binding DataContext.ShowWindow,
                     RelativeSource={RelativeSource AncestorType=Window}}"
                     HorizontalAlignment="Left" 
                     Margin="632,40,0,0" 
