@@ -1,39 +1,24 @@
-﻿using PersonRecord.Commands;
-using PersonRecord.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PersonRecord.Models;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 
 namespace PersonRecord.ViewModel
 {
     public class AddUserViewModel
     {
-
-        public ICommand AddUserCommand { get; set; }
-
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public int? Age { get; set; }
         public string? Job { get; set; }
 
-        public AddUserViewModel()
-        {
-            AddUserCommand = new RelayCommand(AddUser, CanAddUser);
-        }
+        public bool CanAddUser { get; set; } = true;
 
-        private bool CanAddUser(object obj)
-        {
-            return true;
-        }
+        private RelayCommand _addUserCommand;
+        public RelayCommand AddUserCommand => _addUserCommand ?? (_addUserCommand = new RelayCommand(AddUser, () => CanAddUser));
 
-        private void AddUser(object obj)
+        private void AddUser()
         {
-
             UserManager.AddUser(new User() { Name = Name, Surname = Surname, Age = Age,Job = Job});
-
         }
     }
 }

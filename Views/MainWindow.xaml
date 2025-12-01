@@ -17,7 +17,6 @@
                      HorizontalAlignment="left" 
                      BorderThickness="1" 
                      BorderBrush="#E0E0E0" />
-            <!--<Button Height="30" CommandParameter="{x:Reference Name= MainWindow}" Command="{Binding ShowWindowCommand}"  Content="Add User" Width="100" VerticalContentAlignment="Center" Padding="5" Margin="25" VerticalAlignment="Top" HorizontalAlignment="Right" BorderThickness="1" BorderBrush="#E0E0E0"  />-->
             <ListView Name="UserList" 
                       ItemsSource="{Binding Users}" 
                       BorderBrush="#cdcdcd" 
@@ -33,13 +32,13 @@
                 </ListView.View>
             </ListView>
             <Button Content="Edit" 
-                    Command="{Binding DataContext.ShowWindow,
-                    RelativeSource={RelativeSource AncestorType=Window}}"
+               Command="{Binding EditUserDetailsCommand}"
                     HorizontalAlignment="Left" 
                     Margin="632,40,0,0" 
                     VerticalAlignment="Top" 
                     Width="55"/>
-            
+            <ContentControl Content="{Binding CurrentView}" />
+
         </Grid>
 
     </Grid>

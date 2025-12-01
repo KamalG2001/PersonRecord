@@ -13,8 +13,7 @@ namespace PersonRecord
         public MainWindow()
         {
             InitializeComponent();
-            MainViewModel mainViewModel = new MainViewModel();
-            this.DataContext = mainViewModel;
+            this.DataContext = new MainViewModel();
         }
 
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)

@@ -20,7 +20,6 @@ namespace PersonRecord.Models
         public static ObservableCollection<User> GetUsers()
         {
             return _DatabaseUsers;
-
         }
 
         public static void AddUser(User user)

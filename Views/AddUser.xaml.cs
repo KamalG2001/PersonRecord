@@ -12,7 +12,6 @@ namespace PersonRecord.Views
             InitializeComponent();
             AddUserViewModel addUserViewModel = new AddUserViewModel();
             this.DataContext = addUserViewModel;
-
         }
     }
 }
