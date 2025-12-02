@@ -18,4 +18,5 @@ namespace PersonRecord.Models
         public string? Job { get; set; }
 
     }
+    
 }

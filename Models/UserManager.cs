@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.System;
 
 namespace PersonRecord.Models
 {
@@ -25,8 +26,26 @@ namespace PersonRecord.Models
         public static void AddUser(User user)
         {
             _DatabaseUsers.Add(user);
-
         }
 
+
+        public static void DeleteUser(User user) 
+        {
+            int index = -1;
+            for (int i = 0; i < _DatabaseUsers.Count; i++)
+            {
+                if (_DatabaseUsers[i].Name != null && _DatabaseUsers[i].Surname != null &&
+                    _DatabaseUsers[i].Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase) &&
+                    _DatabaseUsers[i].Surname.Equals(user.Surname, StringComparison.OrdinalIgnoreCase))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index != -1)
+            {
+                _DatabaseUsers.RemoveAt(index);
+            }
+        }
     }
 }
