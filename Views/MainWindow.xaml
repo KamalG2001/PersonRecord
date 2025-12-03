@@ -34,12 +34,26 @@
             <Button Content="Edit" 
                Command="{Binding EditUserDetailsCommand}"
                     HorizontalAlignment="Left" 
-                    Margin="632,40,0,0" 
+                    Margin="645,40,0,0" 
                     VerticalAlignment="Top" 
                     Width="55"/>
-            <ContentControl Content="{Binding CurrentView}" />
+            <ContentControl  >
+                <Button Content="Save"  
+                 Command="{Binding SaveUserDetailsCommand}"
+                        HorizontalAlignment="Left" 
+                        Margin="590,40,0,0" 
+                        VerticalAlignment="Top" 
+                        Width="55" RenderTransformOrigin="2.618,0.553"/>
+            </ContentControl>
+            <ComboBox x:Name="ComboBoxFileSave" HorizontalAlignment="Left" 
+                      ItemsSource="{Binding ExportFormats}"
+                      SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"
+                      Margin="520,40,0,0" 
+                      VerticalAlignment="Top" 
+                      Width="70" 
+                      Height="20">
 
+            </ComboBox>
         </Grid>
-
     </Grid>
 </Window>

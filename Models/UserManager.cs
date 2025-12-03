@@ -28,7 +28,6 @@ namespace PersonRecord.Models
             _DatabaseUsers.Add(user);
         }
 
-
         public static void DeleteUser(User user) 
         {
             int index = -1;
