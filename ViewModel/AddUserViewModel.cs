@@ -20,11 +20,20 @@ namespace PersonRecord.ViewModel
         public RelayCommand DeleteUserCommand => _deleteUserCommand ?? (_deleteUserCommand = new RelayCommand(DeleteUser, () => CanDeleteUser));
         private void AddUser()
         {
-            UserManager.AddUser(new User() { Name = Name, Surname = Surname, Age = Age,Job = Job});
+            UserManager.AddUser(new User() { Name = Name, Surname = Surname, Age = Age, Job = Job});
         }
         private void DeleteUser()
         {
           UserManager.DeleteUser(new User() { Name = Name, Surname = Surname });
         }
+        private User? _originalUser;
+
+        public User? OriginalUser
+        {
+            get => _originalUser;
+            set => _originalUser = value;
+        }
+
+        
     }
 }

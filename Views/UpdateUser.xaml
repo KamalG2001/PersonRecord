@@ -1,12 +1,12 @@
-﻿<Window x:Name="EditWindow" x:Class="PersonRecord.Views.AddUser"
+﻿<Window x:Class="PersonRecord.Views.UpdateUser"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PersonRecord.Views"
         mc:Ignorable="d"
-        Title="AddUser" Height="450" Width="800">
-    <Grid x:Name="UserWindow" Margin="0,0,0,-226">
+        Title="UpdateUser" Height="450" Width="800">
+    <Grid Margin="0,0,0,-336">
         <Label Content="Name" Margin="25" VerticalAlignment="Top" HorizontalAlignment="left"/>
         <TextBox  Height="30" Text="{Binding Name}" Width="200" Margin="25,50" VerticalAlignment="Top" HorizontalAlignment="left" BorderThickness="1" BorderBrush="#E0E0E0" />
 
@@ -18,8 +18,7 @@
 
         <Label Content="Job" Margin="25,250" VerticalAlignment="Top" HorizontalAlignment="left"/>
         <TextBox  Height="30" Width="200" Text="{Binding Job}" Margin="25,275" VerticalAlignment="Top" HorizontalAlignment="left" BorderThickness="1" BorderBrush="#E0E0E0" />
-        <Button Height="30" Command="{Binding AddUserCommand}" Content="Add" Width="70"  VerticalContentAlignment="Center" Padding="5" Margin="682,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#E0E0E0" />
-        <Button Height="30" Command="{Binding DeleteUserCommand}"  Content="Delete" Width="70"  VerticalContentAlignment="Center" Padding="5" Margin="607,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#E0E0E0"/>
-        
+        <Button Height="30" Command="{Binding UpdateUserCommand}" Content="Update" Width="70"  VerticalContentAlignment="Center" Padding="5" Margin="682,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#E0E0E0" />
+
     </Grid>
 </Window>

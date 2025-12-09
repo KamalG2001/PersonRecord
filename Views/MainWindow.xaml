@@ -19,6 +19,7 @@
                      BorderBrush="#E0E0E0" />
             <ListView Name="UserList" 
                       ItemsSource="{Binding Users}" 
+                      SelectedItem="{Binding SelectedUser}"
                       BorderBrush="#cdcdcd" 
                       Margin="25,70,25,25" 
                       Padding="0">
@@ -37,14 +38,12 @@
                     Margin="645,40,0,0" 
                     VerticalAlignment="Top" 
                     Width="55"/>
-            <ContentControl  >
-                <Button Content="Save"  
-                 Command="{Binding SaveUserDetailsCommand}"
-                        HorizontalAlignment="Left" 
-                        Margin="590,40,0,0" 
-                        VerticalAlignment="Top" 
-                        Width="55" RenderTransformOrigin="2.618,0.553"/>
-            </ContentControl>
+            <Button Content="Save"  
+                Command="{Binding SaveUserDetailsCommand}"
+                    HorizontalAlignment="Left" 
+                    Margin="590,40,0,0" 
+                    VerticalAlignment="Top" 
+                    Width="55" RenderTransformOrigin="2.618,0.553"/>
             <ComboBox x:Name="ComboBoxFileSave" HorizontalAlignment="Left" 
                       ItemsSource="{Binding ExportFormats}"
                       SelectedItem="{Binding SelectedFormat, Mode=TwoWay}"
@@ -55,5 +54,21 @@
 
             </ComboBox>
         </Grid>
+
+        <Button Content="Delete"
+                Command="{Binding DeleteSelectedUserCommand}"
+                HorizontalAlignment="Left" 
+                Margin="437,80,0,0" 
+                VerticalAlignment="Top"/>
+        <Button Content="OpenFile" 
+                Command="{Binding OpenFileCommand}"
+                HorizontalAlignment="Left"
+                Margin="491,80,0,0" 
+                VerticalAlignment="Top"/>
+        <Button Content="Update"
+                Command="{Binding UpdateUserCommand}"
+                HorizontalAlignment="Left" 
+                Margin="397,80,0,0" 
+                VerticalAlignment="Top"/>
     </Grid>
 </Window>

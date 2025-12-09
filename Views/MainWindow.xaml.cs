@@ -1,4 +1,5 @@
-﻿using PersonRecord.Models;
+﻿using PersonRecord.FileReader;
+using PersonRecord.Models;
 using PersonRecord.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,6 +15,8 @@ namespace PersonRecord
         {
             InitializeComponent();
             this.DataContext = new MainViewModel();
+            //DataContext = new MainViewModel(new FileDialogService());
+
         }
 
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
