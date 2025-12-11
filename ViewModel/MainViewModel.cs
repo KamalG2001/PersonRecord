@@ -14,8 +14,21 @@ namespace PersonRecord.ViewModel
 {
     public class MainViewModel
     {
+
+        public string? Name { get; set; }
+        public string? Surname { get; set; }
+        public int? Age { get; set; }
+        public string? Job { get; set; }
         public ObservableCollection<User> Users { get; set; }
-        public User? SelectedUser { get; set; }
+        private User? _selectedUser;
+        public User? SelectedUser
+        {
+            get => _selectedUser;
+            set
+            {
+                _selectedUser = value;
+            }
+        }
         public bool CanDeleteUser { get; set; } = true;
         public bool CanUpdateUser { get; set; } = true;
         public MainViewModel()
@@ -146,10 +159,17 @@ namespace PersonRecord.ViewModel
         {
             if (SelectedUser == null)
                 return;
-            UpdateView = new UpdateUser();
-            var a = (Window)UpdateView;
-            a.Show();
+            var updateUserView = new UpdateUser
+            {
+                DataContext = new UpdateUserViewModel(SelectedUser)
+            };
+            SelectedUser.Name = Name;
+            SelectedUser.Surname = Surname;
+            SelectedUser.Age = Age;
+            SelectedUser.Job = Job;
+            updateUserView.Show();
         }
+
     }
 }
 

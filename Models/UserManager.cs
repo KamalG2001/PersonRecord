@@ -16,14 +16,19 @@ namespace PersonRecord.Models
     {
         public static ObservableCollection<User> _DatabaseUsers = new ObservableCollection<User>() 
         {
-           new User(){ Name = "Vagif", Surname = "Mammadov", Age = 25, Job = "Accountant" },
-           new User(){ Name = "Akif", Surname = "Valizada", Age = 32, Job = "Trainer" },
-           new User(){ Name = "Rustam", Surname = "Talibov", Age = 44, Job ="Businessman" },
-           new User(){ Name = "Ayaz", Surname = "Guliyev", Age = 20, Job = "------" }
+           //new User(){ Name = "Vagif", Surname = "Mammadov", Age = 25, Job = "Accountant" },
+           //new User(){ Name = "Akif", Surname = "Valizada", Age = 32, Job = "Trainer" },
+           //new User(){ Name = "Rustam", Surname = "Talibov", Age = 44, Job ="Businessman" },
+           //new User(){ Name = "Ayaz", Surname = "Guliyev", Age = 20, Job = "------" }
         };
         
 
         public static ObservableCollection<User> GetUsers()
+        {
+            return _DatabaseUsers;
+        }
+
+        public static ObservableCollection<User> SetUsers(User user)
         {
             return _DatabaseUsers;
         }
@@ -40,26 +45,6 @@ namespace PersonRecord.Models
                 _DatabaseUsers.Remove(user);
         }
 
-        public static void UpdateUser(User oldUser, User newUser)
-        {
-            int index = -1;
-            for (int i = 0; i < _DatabaseUsers.Count; i++)
-            {
-                if (_DatabaseUsers[i].Name != null && _DatabaseUsers[i].Surname != null &&
-                    _DatabaseUsers[i].Name.Equals(oldUser.Name, StringComparison.OrdinalIgnoreCase) &&
-                    _DatabaseUsers[i].Surname.Equals(oldUser.Surname, StringComparison.OrdinalIgnoreCase) &&
-                    _DatabaseUsers[i].Age == oldUser.Age &&
-                    string.Equals(_DatabaseUsers[i].Job, oldUser.Job, StringComparison.OrdinalIgnoreCase))
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if (index != -1)
-            {
-                _DatabaseUsers[index] = newUser;
-            }
-        }
         public static void DeleteUser(User user) 
         {
       

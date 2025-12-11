@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "Vagif",
+    "Surname": "Mammadov",
+    "Age": 25,
+    "Job": "Accountant"
+  },
+  {
+    "Name": "Akif",
+    "Surname": "Valizada",
+    "Age": 32,
+    "Job": "Trainer"
+  },
+  {
+    "Name": "Rustam",
+    "Surname": "Talibov",
+    "Age": 44,
+    "Job": "Businessman"
+  },
+  {
+    "Name": "Ayaz",
+    "Surname": "Guliyev",
+    "Age": 20,
+    "Job": "------"
+  }
+]
