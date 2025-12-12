@@ -26,7 +26,9 @@ namespace PersonRecord.ViewModel
             get => _selectedUser;
             set
             {
+                if (_selectedUser == value) return;
                 _selectedUser = value;
+                OnPropertyChanged(nameof(SelectedUser));
             }
         }
         public bool CanDeleteUser { get; set; } = true;
@@ -164,10 +166,6 @@ namespace PersonRecord.ViewModel
             {
                 DataContext = new UpdateUserViewModel(SelectedUser)
             };
-            SelectedUser.Name = Name;
-            SelectedUser.Surname = Surname;
-            SelectedUser.Age = Age;
-            SelectedUser.Job = Job;
             updateUserView.ShowDialog();
         }
 

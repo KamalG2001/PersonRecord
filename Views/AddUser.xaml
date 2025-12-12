@@ -19,7 +19,6 @@
         <Label Content="Job" Margin="25,250" VerticalAlignment="Top" HorizontalAlignment="left"/>
         <TextBox  Height="30" Width="200" Text="{Binding Job}" Margin="25,275" VerticalAlignment="Top" HorizontalAlignment="left" BorderThickness="1" BorderBrush="#E0E0E0" />
         <Button Height="30" Command="{Binding AddUserCommand}" Content="Add" Width="70"  VerticalContentAlignment="Center" Padding="5" Margin="682,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#E0E0E0" />
-        <Button Height="30" Command="{Binding DeleteUserCommand}"  Content="Delete" Width="70"  VerticalContentAlignment="Center" Padding="5" Margin="607,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="#E0E0E0"/>
         
     </Grid>
 </Window>

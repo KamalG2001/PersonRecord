@@ -10,6 +10,8 @@ namespace PersonRecord.ViewModel
 {
     public class UpdateUserViewModel : INotifyPropertyChanged
     {
+        public event System.Action? UserUpdated;
+
         private string? _name;
         public string? Name { get => _name; set { if (_name == value) return; _name = value; OnPropertyChanged(nameof(Name)); } }
 
@@ -58,6 +60,9 @@ namespace PersonRecord.ViewModel
                 _user.Surname = Surname;
                 _user.Age = Age;
                 _user.Job = Job;
+
+                // Notify that user has been updated
+                UserUpdated?.Invoke();
             }
 
             if (Application.Current.Windows.Count > 0)
