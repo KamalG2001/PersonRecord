@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace PersonRecord.ViewModel
 {
-    public class MainViewModel
+    public class MainViewModel : INotifyPropertyChanged
     {
 
         public string? Name { get; set; }
@@ -52,9 +52,15 @@ namespace PersonRecord.ViewModel
             set
             {
                 _updateView = value;
+                //OnPropertyChanged(nameof(UpdateView));
             }
         }
-
+        private string _fileContent;
+        public string FileContent
+        {
+            get => _fileContent;
+            set { _fileContent = value; OnPropertyChanged(nameof(FileContent)); }
+        }
         private RelayCommand _editUserDetailsCommand;
         public RelayCommand EditUserDetailsCommand => _editUserDetailsCommand ?? (_editUserDetailsCommand = new RelayCommand(EditUserDetails));
 
@@ -75,12 +81,7 @@ namespace PersonRecord.ViewModel
             OpenFileCommand = new RelayCommand(OpenFile);
         }
 
-        private string _fileContent;
-        public string FileContent
-        {
-            get => _fileContent;
-            set { _fileContent = value; OnPropertyChanged(nameof(FileContent)); }
-        }
+        
 
         public RelayCommand OpenFileCommand { get; }
        
@@ -167,7 +168,7 @@ namespace PersonRecord.ViewModel
             SelectedUser.Surname = Surname;
             SelectedUser.Age = Age;
             SelectedUser.Job = Job;
-            updateUserView.Show();
+            updateUserView.ShowDialog();
         }
 
     }

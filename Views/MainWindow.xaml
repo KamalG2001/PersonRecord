@@ -32,7 +32,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Content="Edit" 
+            <Button Content="Add" 
                Command="{Binding EditUserDetailsCommand}"
                     HorizontalAlignment="Left" 
                     Margin="645,40,0,0" 
