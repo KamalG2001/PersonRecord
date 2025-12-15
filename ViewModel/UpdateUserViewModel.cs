@@ -1,9 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using PersonRecord.Models;
-using PersonRecord.Views;
 using System.ComponentModel;
 using System.Windows;
-using System.Collections.ObjectModel;
 
 
 namespace PersonRecord.ViewModel

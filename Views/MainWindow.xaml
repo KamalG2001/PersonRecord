@@ -58,17 +58,17 @@
         <Button Content="Delete"
                 Command="{Binding DeleteSelectedUserCommand}"
                 HorizontalAlignment="Left" 
-                Margin="437,80,0,0" 
+                Margin="502,80,0,0" 
                 VerticalAlignment="Top"/>
-        <Button Content="OpenFile" 
+        <!--<Button Content="OpenFile" 
                 Command="{Binding OpenFileCommand}"
                 HorizontalAlignment="Left"
                 Margin="491,80,0,0" 
-                VerticalAlignment="Top"/>
+                VerticalAlignment="Top"/>-->
         <Button Content="Update"
                 Command="{Binding UpdateUserCommand}"
                 HorizontalAlignment="Left" 
-                Margin="397,80,0,0" 
+                Margin="454,80,0,0" 
                 VerticalAlignment="Top"/>
     </Grid>
 </Window>

@@ -33,10 +33,6 @@ namespace PersonRecord.ViewModel
         }
         public bool CanDeleteUser { get; set; } = true;
         public bool CanUpdateUser { get; set; } = true;
-        public MainViewModel()
-        {
-            Users = UserManager.GetUsers();
-        }
 
         private object _currentView;
         public object CurrentView
@@ -54,7 +50,6 @@ namespace PersonRecord.ViewModel
             set
             {
                 _updateView = value;
-                //OnPropertyChanged(nameof(UpdateView));
             }
         }
         private string _fileContent;
@@ -77,16 +72,23 @@ namespace PersonRecord.ViewModel
         public RelayCommand UpdateUserCommand => _updateUserCommand ?? (_updateUserCommand = new RelayCommand(UpdateUser, () => CanUpdateUser));
 
         private readonly IFileDialogService _dialogService;
+        public RelayCommand OpenFileCommand { get; }
+
         public MainViewModel(IFileDialogService dialogService)
         {
             _dialogService = dialogService;
+            Users = UserManager.GetUsers();
+            _currentView = new object();
+            _updateView = new object();
+            _fileContent = string.Empty;
+            _editUserDetailsCommand = new RelayCommand(EditUserDetails);
+            _saveUserDetailsCommand = new RelayCommand(SaveUserDetails);
+            _openUserDetailsCommand = new RelayCommand(OpenUserDetails);
+            _deleteSelectedUserCommand = new RelayCommand(DeleteSelectedUser, () => CanDeleteUser);
+            _updateUserCommand = new RelayCommand(UpdateUser, () => CanUpdateUser);
             OpenFileCommand = new RelayCommand(OpenFile);
         }
 
-        
-
-        public RelayCommand OpenFileCommand { get; }
-       
         private void OpenFile()
         {
             var filePath = _dialogService.OpenFile("Json Files|*.json|All Files|*.*");
@@ -157,7 +159,6 @@ namespace PersonRecord.ViewModel
         {
             UserManager.DeleteSelectedUser(SelectedUser);
         }
-
         private void UpdateUser()
         {
             if (SelectedUser == null)
@@ -168,7 +169,6 @@ namespace PersonRecord.ViewModel
             };
             updateUserView.ShowDialog();
         }
-
     }
 }
 

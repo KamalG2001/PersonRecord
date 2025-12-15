@@ -18,30 +18,27 @@ namespace PersonRecord
         public MainWindow()
         {
             InitializeComponent();
-            //this.DataContext = new MainViewModel();
-            DataContext = new MainViewModel(new FileDialogService());
+ 
             var services = new ServiceCollection();
             services.AddMapperService();
 
             var provider = services.BuildServiceProvider();
             var mapper = provider.GetRequiredService<IMapperService>();
+            var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JsonReader", "Users.json");
 
-            var jsonPath = "Users.json";
-            if (!File.Exists(jsonPath))
+            if (File.Exists(jsonPath))
             {
-                Console.WriteLine("JSON file not found!");
-                return;
+                var jsonData = File.ReadAllText(jsonPath);
+                var users = mapper.MapFromJson(jsonData);
+
+                foreach (var user in users)
+                {
+                    UserManager.AddUser(user);
+                }
             }
 
-            var jsonData = File.ReadAllText(jsonPath);
-            var users = mapper.MapFromJson(jsonData);
+            DataContext = new MainViewModel(new FileDialogService());
 
-            foreach (var user in users)
-            {
-                UserList.Items.Add(user);
-            }
-
-            Console.ReadLine();
         }
 
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
