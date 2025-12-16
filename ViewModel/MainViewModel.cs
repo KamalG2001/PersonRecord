@@ -72,11 +72,14 @@ namespace PersonRecord.ViewModel
         public RelayCommand UpdateUserCommand => _updateUserCommand ?? (_updateUserCommand = new RelayCommand(UpdateUser, () => CanUpdateUser));
 
         private readonly IFileDialogService _dialogService;
+        private readonly IExporterFactory _exporterFactory;
+
         public RelayCommand OpenFileCommand { get; }
 
         public MainViewModel(IFileDialogService dialogService)
         {
             _dialogService = dialogService;
+            _exporterFactory = new ExporterFactory();
             Users = UserManager.GetUsers();
             _currentView = new object();
             _updateView = new object();
@@ -116,21 +119,7 @@ namespace PersonRecord.ViewModel
 
         private void SaveUserDetails()
         {
-            IExport exporter;
-            switch (SelectedFormat)
-            {
-                case ExportFormat.Txt:
-                    exporter = new TxtExport();
-                    break;
-                case ExportFormat.Json:
-                    exporter = new JsonExport();
-                    break;
-                case ExportFormat.Csv:
-                    exporter = new CsvExporter();
-                    break; 
-                default:
-                    return;
-            }
+            var exporter = _exporterFactory.CreateExporter(SelectedFormat);
             var service = new ExportService(exporter);
 
             var dialog = new SaveFileDialog();
