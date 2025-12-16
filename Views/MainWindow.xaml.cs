@@ -10,9 +10,6 @@ using static PersonRecord.JsonReader.IJsonService;
 
 namespace PersonRecord
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -38,7 +35,6 @@ namespace PersonRecord
             }
 
             DataContext = new MainViewModel(new FileDialogService());
-
         }
 
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
