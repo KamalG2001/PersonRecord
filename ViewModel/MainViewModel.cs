@@ -14,12 +14,12 @@ namespace PersonRecord.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public int? Age { get; set; }
         public string? Job { get; set; }
         public ObservableCollection<User> Users { get; set; }
+        
         private User? _selectedUser;
         public User? SelectedUser
         {
@@ -31,6 +31,7 @@ namespace PersonRecord.ViewModel
                 OnPropertyChanged(nameof(SelectedUser));
             }
         }
+        
         public bool CanDeleteUser { get; set; } = true;
         public bool CanUpdateUser { get; set; } = true;
 
@@ -38,42 +39,42 @@ namespace PersonRecord.ViewModel
         public object CurrentView
         {
             get => _currentView;
-            set
-            {
-                _currentView = value;
-            }
+            set => _currentView = value;
         }
+        
         private object _updateView;
         public object UpdateView
         {
             get => _updateView;
-            set
-            {
-                _updateView = value;
-            }
+            set => _updateView = value;
         }
-        private string _fileContent;
+        
+        private string _fileContent = string.Empty;
         public string FileContent
         {
             get => _fileContent;
             set { _fileContent = value; OnPropertyChanged(nameof(FileContent)); }
         }
+
         private RelayCommand _editUserDetailsCommand;
-        public RelayCommand EditUserDetailsCommand => _editUserDetailsCommand ?? (_editUserDetailsCommand = new RelayCommand(EditUserDetails));
+        public RelayCommand EditUserDetailsCommand => _editUserDetailsCommand ??= new RelayCommand(EditUserDetails);
 
         private RelayCommand _saveUserDetailsCommand;
-        public RelayCommand SaveUserDetailsCommand => _saveUserDetailsCommand ?? (_saveUserDetailsCommand = new RelayCommand(SaveUserDetails));
+        public RelayCommand SaveUserDetailsCommand => _saveUserDetailsCommand ??= new RelayCommand(SaveUserDetails);
+        
         private RelayCommand _openUserDetailsCommand;
-        public RelayCommand OpenUserDetailsCommand => _openUserDetailsCommand ?? (_openUserDetailsCommand = new RelayCommand(OpenUserDetails));
+        public RelayCommand OpenUserDetailsCommand => _openUserDetailsCommand ??= new RelayCommand(OpenUserDetails);
+        
         public Array ExportFormats => Enum.GetValues(typeof(ExportFormat));
+        
         private RelayCommand _deleteSelectedUserCommand;
-        public RelayCommand DeleteSelectedUserCommand => _deleteSelectedUserCommand ?? (_deleteSelectedUserCommand = new RelayCommand(DeleteSelectedUser, () => CanDeleteUser));
+        public RelayCommand DeleteSelectedUserCommand => _deleteSelectedUserCommand ??= new RelayCommand(DeleteSelectedUser, () => CanDeleteUser);
+        
         private RelayCommand _updateUserCommand;
-        public RelayCommand UpdateUserCommand => _updateUserCommand ?? (_updateUserCommand = new RelayCommand(UpdateUser, () => CanUpdateUser));
+        public RelayCommand UpdateUserCommand => _updateUserCommand ??= new RelayCommand(UpdateUser, () => CanUpdateUser);
 
         private readonly IFileDialogService _dialogService;
         private readonly IExporterFactory _exporterFactory;
-
         public RelayCommand OpenFileCommand { get; }
 
         public MainViewModel(IFileDialogService dialogService)
@@ -83,56 +84,47 @@ namespace PersonRecord.ViewModel
             Users = UserManager.GetUsers();
             _currentView = new object();
             _updateView = new object();
-            _fileContent = string.Empty;
-            _editUserDetailsCommand = new RelayCommand(EditUserDetails);
-            _saveUserDetailsCommand = new RelayCommand(SaveUserDetails);
-            _openUserDetailsCommand = new RelayCommand(OpenUserDetails);
-            _deleteSelectedUserCommand = new RelayCommand(DeleteSelectedUser, () => CanDeleteUser);
-            _updateUserCommand = new RelayCommand(UpdateUser, () => CanUpdateUser);
             OpenFileCommand = new RelayCommand(OpenFile);
         }
 
         private void OpenFile()
         {
             var filePath = _dialogService.OpenFile("Json Files|*.json|All Files|*.*");
-
             if (filePath != null)
             {
                 FileContent = File.ReadAllText(filePath);
             }
         }
+
         private ExportFormat _selectedFormat;
         public ExportFormat SelectedFormat
         {
             get => _selectedFormat;
-            set
-            {
-                _selectedFormat = value;
-            }
+            set => _selectedFormat = value;
         }
+
         private void EditUserDetails()
         {
             CurrentView = new AddUser();
-            var a = (Window)CurrentView;
-            a.Show();
+            if (CurrentView is Window window)
+                window.Show();
         }
 
         private void SaveUserDetails()
         {
             var exporter = _exporterFactory.CreateExporter(SelectedFormat);
-            var service = new ExportService(exporter);
 
             var dialog = new SaveFileDialog();
-
             dialog.Filter = $"{SelectedFormat} files|*.{SelectedFormat.ToString().ToLower()}";
             dialog.FileName = $"Users.{SelectedFormat.ToString().ToLower()}";
 
             if (dialog.ShowDialog() == true)
             {
-                service.Export(Users.ToList(), dialog.FileName);
+                exporter.Export(Users.ToList(), dialog.FileName);
                 MessageBox.Show($"Data exported successfully to:\n{dialog.FileName}");
             }
         }
+
         private void OpenUserDetails()
         {
             CurrentView = new AddUser();
@@ -148,6 +140,7 @@ namespace PersonRecord.ViewModel
         {
             UserManager.DeleteSelectedUser(SelectedUser);
         }
+
         private void UpdateUser()
         {
             if (SelectedUser == null)

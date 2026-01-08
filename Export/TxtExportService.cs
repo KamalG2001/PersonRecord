@@ -3,7 +3,7 @@ using System.IO;
 
 namespace PersonRecord.Export
 {
-    public class TxtExport : IExport
+    public class TxtExportService : IExport
     {
         public void Export(List<User> people, string filePath)
         {

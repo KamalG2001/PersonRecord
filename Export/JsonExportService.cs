@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace PersonRecord.Export
 {
-    internal class JsonExport : IExport
+    public class JsonExportService : IExport
     {
         public void Export(List<User> people, string filePath)
         {

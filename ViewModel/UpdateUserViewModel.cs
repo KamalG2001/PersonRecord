@@ -59,7 +59,6 @@ namespace PersonRecord.ViewModel
                 _user.Age = Age;
                 _user.Job = Job;
 
-                // Notify that user has been updated
                 UserUpdated?.Invoke();
             }
 

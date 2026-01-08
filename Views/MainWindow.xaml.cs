@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using PersonRecord.FileReader;
+﻿using PersonRecord.FileReader;
 using PersonRecord.JsonReader;
 using PersonRecord.Models;
 using PersonRecord.ViewModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using static PersonRecord.JsonReader.IJsonService;
 
 namespace PersonRecord
 {
@@ -15,12 +13,7 @@ namespace PersonRecord
         public MainWindow()
         {
             InitializeComponent();
- 
-            var services = new ServiceCollection();
-            services.AddMapperService();
-
-            var provider = services.BuildServiceProvider();
-            var mapper = provider.GetRequiredService<IMapperService>();
+            var mapper = new JsonService();
             var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "JsonReader", "Users.json");
 
             if (File.Exists(jsonPath))
@@ -33,7 +26,6 @@ namespace PersonRecord
                     UserManager.AddUser(user);
                 }
             }
-
             DataContext = new MainViewModel(new FileDialogService());
         }
 
