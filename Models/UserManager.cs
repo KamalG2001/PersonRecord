@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using Windows.System;
 
 namespace PersonRecord.Models
 {
@@ -24,6 +26,20 @@ namespace PersonRecord.Models
         {
             if (user != null)
                 _DatabaseUsers.Remove(user);
+        }
+
+        public static void UpdateSelectedUser(User user)
+        {
+            var existingUser = _DatabaseUsers.FirstOrDefault(u =>
+                u.Name == user.Name && u.Surname == user.Surname);
+            
+            if (existingUser != null)
+            {
+                existingUser.Name = user.Name;
+                existingUser.Surname = user.Surname;
+                existingUser.Age = user.Age;
+                existingUser.Job = user.Job;
+            }
         }
     }
 }

@@ -1,13 +1,18 @@
-﻿using PersonRecord.ViewModel;
+﻿using PersonRecord.Models;
+using PersonRecord.ViewModel;
 using System.Windows;
+
 namespace PersonRecord.Views
 {
     public partial class AddUser : Window
     {
-        public AddUser()
+        private readonly IUserRepository _userRepository;
+
+        public AddUser(IUserRepository userRepository)
         {
             InitializeComponent();
-            AddUserViewModel addUserViewModel = new AddUserViewModel();
+            _userRepository = userRepository;
+            AddUserViewModel addUserViewModel = new AddUserViewModel(_userRepository);
             this.DataContext = addUserViewModel;
         }
     }

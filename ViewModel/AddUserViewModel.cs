@@ -7,6 +7,13 @@ namespace PersonRecord.ViewModel
 {
     public class AddUserViewModel : INotifyPropertyChanged
     {
+        private readonly IUserRepository _repository;
+
+        public AddUserViewModel(IUserRepository repository)
+        {
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
         private string? _name;
         public string? Name 
         { 
@@ -62,7 +69,9 @@ namespace PersonRecord.ViewModel
 
         private void AddUser()
         {
-            UserManager.AddUser(new User() { Name = Name, Surname = Surname, Age = Age, Job = Job});
+            var newUser = new User() { Name = Name, Surname = Surname, Age = Age, Job = Job };
+            _repository.AddUser(newUser);
+            UserManager.AddUser(newUser);   
         }
 
 

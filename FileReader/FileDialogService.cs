@@ -6,13 +6,26 @@ namespace PersonRecord.FileReader
     {
         public string? OpenFile(string filter)
         {
-            var dialog = new OpenFileDialog();
-            dialog.Filter = filter;
+            var dialog = new OpenFileDialog
+            {
+                Filter = filter,
+                CheckFileExists = true,
+                CheckPathExists = true
+            };
 
-            if (dialog.ShowDialog() == true)
-                return dialog.FileName;
+            return dialog.ShowDialog() == true ? dialog.FileName : null;
+        }
 
-            return null;
+        public string? SaveFile(string filter, string defaultFileName = "")
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = filter,
+                FileName = defaultFileName,
+                CheckPathExists = true
+            };
+
+            return dialog.ShowDialog() == true ? dialog.FileName : null;
         }
     }
 }

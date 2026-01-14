@@ -2,81 +2,81 @@
 using PersonRecord.Models;
 using System.ComponentModel;
 using System.Windows;
-
+using System.Linq;
 
 namespace PersonRecord.ViewModel
 {
     public class UpdateUserViewModel : INotifyPropertyChanged
     {
-        public event System.Action? UserUpdated;
+        private User _user;
+        private readonly IUserRepository _repository;
 
-        private string? _name;
-        public string? Name { get => _name; set { if (_name == value) return; _name = value; OnPropertyChanged(nameof(Name)); } }
+        private RelayCommand? _saveCommand;
+        public RelayCommand SaveCommand =>
+            _saveCommand ??= new RelayCommand(SaveUser);
 
-        private string? _surname;
-        public string? Surname { get => _surname; set { if (_surname == value) return; _surname = value; OnPropertyChanged(nameof(Surname)); } }
+        private RelayCommand? _cancelCommand;
+        public RelayCommand CancelCommand =>
+            _cancelCommand ??= new RelayCommand(CancelEdit);
 
-        private int? _age;
-        public int? Age { get => _age; set { if (_age == value) return; _age = value; OnPropertyChanged(nameof(Age)); } }
-
-        private string? _job;
-        public string? Job { get => _job; set { if (_job == value) return; _job = value; OnPropertyChanged(nameof(Job)); } }
-
-
-        private RelayCommand _updateUserCommand;
-        public RelayCommand UpdateUserCommand => _updateUserCommand ?? (_updateUserCommand = new RelayCommand(UpdateSelectedUser));
-        
-        private User? _user;
-        public User? User
+        public string? Name
         {
-            get => _user;
-            set
+            get => _user.Name;
+            set { _user.Name = value; OnPropertyChanged(nameof(Name)); }
+        }
+
+        public string? Surname
+        {
+            get => _user.Surname;
+            set { _user.Surname = value; OnPropertyChanged(nameof(Surname)); }
+        }
+
+        public int? Age
+        {
+            get => _user.Age;
+            set { _user.Age = value; OnPropertyChanged(nameof(Age)); }
+        }
+
+        public string? Job
+        {
+            get => _user.Job;
+            set { _user.Job = value; OnPropertyChanged(nameof(Job)); }
+        }
+
+        public UpdateUserViewModel(User user, IUserRepository repository)
+        {
+            _user = user ?? throw new ArgumentNullException(nameof(user));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        private void SaveUser()
+        {
+            try
             {
-                if (_user == value) return;
-                _user = value;
-                OnPropertyChanged(nameof(User));
+                _repository.UpdateUser(_user);
+                MessageBox.Show("User updated successfully.", "Update Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                CloseWindow();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating user: {ex.Message}", "Update Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        public UpdateUserViewModel(User? user)
+        private void CancelEdit()
         {
-            _user = user;
-            if (user != null)
-            {
-                Name = user.Name;
-                Surname = user.Surname;
-                Age = user.Age;
-                Job = user.Job;
-            }
+            CloseWindow();
         }
 
-        private void UpdateSelectedUser()
+        private void CloseWindow()
         {
-            if (_user != null)
-            {
-                _user.Name = Name;
-                _user.Surname = Surname;
-                _user.Age = Age;
-                _user.Job = Job;
-
-                UserUpdated?.Invoke();
-            }
-
-            if (Application.Current.Windows.Count > 0)
-            {
-                foreach (Window w in Application.Current.Windows)
-                {
-                    if (w.DataContext == this)
-                    {
-                        w.Close();
-                        break;
-                    }
-                }
-            }
+            Application.Current.Windows.OfType<Window>()
+                .FirstOrDefault(w => w.IsActive)?.Close();
         }
+
         public event PropertyChangedEventHandler? PropertyChanged;
+
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
     }
 }
