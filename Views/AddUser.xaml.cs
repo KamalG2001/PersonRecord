@@ -1,5 +1,4 @@
 ﻿using PersonRecord.Models;
-using PersonRecord.Models.Providers;
 using PersonRecord.ViewModel;
 using System.Windows;
 
@@ -9,11 +8,11 @@ namespace PersonRecord.Views
     {
         private readonly IUserRepository _userRepository;
 
-        public AddUser(IUserRepository userRepository, IDataProvider dataProvider)
+        public AddUser(IUserRepository userRepository)
         {
             InitializeComponent();
             _userRepository = userRepository;
-            AddUserViewModel addUserViewModel = new AddUserViewModel(dataProvider);
+            AddUserViewModel addUserViewModel = new AddUserViewModel(_userRepository);
             this.DataContext = addUserViewModel;
         }
     }

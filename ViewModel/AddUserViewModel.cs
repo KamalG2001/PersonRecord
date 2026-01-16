@@ -1,6 +1,5 @@
 ﻿using PersonRecord.Models;
-using PersonRecord.Models.Providers;
-using System.Windows;
+using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using System.ComponentModel;
 
@@ -8,11 +7,11 @@ namespace PersonRecord.ViewModel
 {
     public class AddUserViewModel : INotifyPropertyChanged
     {
-        private readonly IDataProvider _dataProvider;
+        private readonly IUserRepository _repository;
 
-        public AddUserViewModel(IDataProvider dataProvider)
+        public AddUserViewModel(IUserRepository repository)
         {
-            _dataProvider = dataProvider ?? throw new ArgumentNullException(nameof(dataProvider));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         private string? _name;
@@ -63,62 +62,26 @@ namespace PersonRecord.ViewModel
             }
         }
 
-        public bool CanAddUser => !string.IsNullOrWhiteSpace(Name) && 
-            !string.IsNullOrWhiteSpace(Surname) && 
-            Age.HasValue && 
-            !string.IsNullOrWhiteSpace(Job);
+        public bool CanAddUser { get; set; } = true;
 
         private RelayCommand _addUserCommand;
         public RelayCommand AddUserCommand => _addUserCommand ?? (_addUserCommand = new RelayCommand(AddUser, () => CanAddUser));
 
         private void AddUser()
         {
-            if (!ValidateInput())
-                return;
-
-                var newUser = new User { Name = Name, Surname = Surname, Age = Age, Job = Job };
-                _dataProvider.AddUser(newUser);
-                ClearFields();
-                CloseWindow();
-           
+            var newUser = new User() { Name = Name, Surname = Surname, Age = Age, Job = Job };
+            _repository.AddUser(newUser);
+            UserManager.AddUser(newUser);   
         }
 
-        private bool ValidateInput()
-        {
-            if (string.IsNullOrWhiteSpace(Name))
-            {
-                MessageBox.Show("Please enter a name.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(Surname))
-            {
-                MessageBox.Show("Please enter a surname.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (!Age.HasValue || Age <= 0)
-            {
-                MessageBox.Show("Please enter a valid age.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(Job))
-            {
-                MessageBox.Show("Please enter a job.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            return true;
-        }
 
-        private void ClearFields()
-        {
-            Name = null;
-            Surname = null;
-            Age = null;
-            Job = null;
-        }
 
-        private void CloseWindow()
+        private User? _originalUser;
+
+        public User? OriginalUser
         {
-            Application.Current.Windows.OfType<Views.AddUser>().FirstOrDefault()?.Close();
+            get => _originalUser;
+            set => _originalUser = value;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

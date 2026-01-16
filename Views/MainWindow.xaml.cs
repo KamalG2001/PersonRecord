@@ -1,37 +1,16 @@
 ﻿using PersonRecord.FileReader;
 using PersonRecord.JsonReader;
 using PersonRecord.Models;
-using PersonRecord.Models.Providers;
 using PersonRecord.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace PersonRecord
 {
-
-
     public partial class MainWindow : Window
     {
-        //public MainWindow()
-        //{
-        //    InitializeComponent();
-
-        //    var storageType = StorageType.Repository;
-
-        //    IUserRepository? repository;
-        //    if (storageType == StorageType.Repository)
-        //        repository = (JsonUserRepository?)new JsonUserRepository();
-        //    else
-        //        repository = null;
-
-
-        //    DataContext = new MainViewModel(
-        //        new FileDialogService(),
-        //        storageType,
-        //        repository
-        //    );
-        //}
         private IUserRepository _repository;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,7 +27,13 @@ namespace PersonRecord
 
         private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+            UserList.Items.Filter = FilterMethod;
+        }
+
+        private bool FilterMethod(object obj)
+        {
+            var user = (User)obj;
+            return user.Name.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

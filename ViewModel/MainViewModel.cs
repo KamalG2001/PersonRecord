@@ -3,7 +3,6 @@ using PersonRecord.Export;
 using PersonRecord.FileReader;
 using PersonRecord.Models;
 using PersonRecord.Models.Enum;
-using PersonRecord.Models.Providers;
 using PersonRecord.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -43,7 +42,7 @@ namespace PersonRecord.ViewModel
         }
 
         public ObservableCollection<User> Users { get; set; }
-
+        
         private User? _selectedUser;
         public User? SelectedUser
         {
@@ -92,47 +91,39 @@ namespace PersonRecord.ViewModel
         }
 
         private RelayCommand? _editUserDetailsCommand;
-        public RelayCommand EditUserDetailsCommand =>
+        public RelayCommand EditUserDetailsCommand => 
             _editUserDetailsCommand ??= new RelayCommand(EditUserDetails);
 
         private RelayCommand? _saveUserDetailsCommand;
-        public RelayCommand SaveUserDetailsCommand =>
+        public RelayCommand SaveUserDetailsCommand => 
             _saveUserDetailsCommand ??= new RelayCommand(SaveUserDetails);
 
         private RelayCommand? _openUserDetailsCommand;
-        public RelayCommand OpenUserDetailsCommand =>
+        public RelayCommand OpenUserDetailsCommand => 
             _openUserDetailsCommand ??= new RelayCommand(OpenUserDetails);
 
         public Array ExportFormats => System.Enum.GetValues(typeof(ExportFormat));
 
         private RelayCommand? _deleteSelectedUserCommand;
-        public RelayCommand DeleteSelectedUserCommand =>
+        public RelayCommand DeleteSelectedUserCommand => 
             _deleteSelectedUserCommand ??= new RelayCommand(DeleteSelectedUser, () => CanDeleteUser);
 
         private RelayCommand? _updateUserCommand;
-        public RelayCommand UpdateUserCommand =>
+        public RelayCommand UpdateUserCommand => 
             _updateUserCommand ??= new RelayCommand(UpdateUser, () => CanUpdateUser);
 
         private readonly IFileDialogService _dialogService;
-        private readonly IDataProvider _dataProvider;
+        private readonly IUserRepository _repository;
         private readonly IExporterFactory _exporterFactory;
 
         public RelayCommand OpenFileCommand { get; }
 
-        private int _selectedFormatValue = -1;
-        public ExportFormat SelectedFormat
-        {
-            get => _selectedFormatValue >= 0 ? (ExportFormat)_selectedFormatValue : default;
-            set { _selectedFormatValue = (int)value; }
-        }
-
-        public MainViewModel(IFileDialogService dialogService, StorageType storageType, IUserRepository? repository = null)
+        public MainViewModel(IFileDialogService dialogService, IUserRepository repository)
         {
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            _dataProvider = DataProviderFactory.CreateProvider(storageType, repository);
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _exporterFactory = new ExporterFactory();
-            
-            Users = new ObservableCollection<User>(_dataProvider.GetAllUsers());
+            Users = UserManager.GetUsers();
             OpenFileCommand = new RelayCommand(OpenFile);
         }
 
@@ -152,26 +143,26 @@ namespace PersonRecord.ViewModel
             }
         }
 
+        private ExportFormat _selectedFormat;
+        public ExportFormat SelectedFormat
+        {
+            get => _selectedFormat;
+            set { _selectedFormat = value; }
+        }
+
         private void EditUserDetails()
         {
-            var addUserView = new AddUser(
-                _dataProvider is IUserRepository repo ? repo : null,
-                _dataProvider
-            )
+            var addUserView = new AddUser(_repository)
             {
-                DataContext = new AddUserViewModel(_dataProvider)
+                DataContext = new AddUserViewModel(_repository)
             };
-
+  
             addUserView.ShowDialog();
-            RefreshUsers();
         }
 
         private void OpenUserDetails()
         {
-            ShowWindow(new AddUser(
-                _dataProvider is IUserRepository repo ? repo : null,
-                _dataProvider
-            ));
+            ShowWindow(new AddUser(_repository));
         }
 
         private void ShowWindow(Window window)
@@ -184,17 +175,15 @@ namespace PersonRecord.ViewModel
 
         private void SaveUserDetails()
         {
-            if (_selectedFormatValue < 0)
-            {
-                MessageBox.Show("Please select an export format.", "Export Format Required", MessageBoxButton.OK, MessageBoxImage.Warning);
+            if (!ValidateExportFormat())
                 return;
-            }
 
             try
             {
                 var exporter = _exporterFactory.CreateExporter(SelectedFormat);
                 var fileName = GenerateFileName();
                 var filter = GenerateFilter();
+
                 var filePath = _dialogService.SaveFile(filter, fileName);
 
                 if (filePath != null)
@@ -219,14 +208,15 @@ namespace PersonRecord.ViewModel
 
             try
             {
-                _dataProvider.DeleteUser(SelectedUser);
-                Users.Remove(SelectedUser);
-                MessageBox.Show("User deleted successfully.", "Delete Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                    _repository.DeleteUser(SelectedUser);
+                    UserManager.DeleteSelectedUser(SelectedUser);
+                    MessageBox.Show("User deleted successfully.", "Delete Successful", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error deleting user: {ex.Message}", "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        
         }
 
         private void UpdateUser()
@@ -237,45 +227,30 @@ namespace PersonRecord.ViewModel
                 return;
             }
 
-            // Fix: Pass IUserRepository to UpdateUserViewModel, not IDataProvider
-            IUserRepository? repository = _dataProvider as IUserRepository;
-            if (repository == null)
-            {
-                MessageBox.Show("Update operation requires a repository.", "Repository Missing", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             var updateUserView = new UpdateUser
             {
-                DataContext = new UpdateUserViewModel(SelectedUser, repository)
+                DataContext = new UpdateUserViewModel(SelectedUser, _repository)
             };
             updateUserView.ShowDialog();
-
-            try
-            {
-                _dataProvider.UpdateUser(SelectedUser);
-                RefreshUsers();
-                MessageBox.Show("User updated successfully.", "Update Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error updating user: {ex.Message}", "Update Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            
+            _repository.UpdateUser(SelectedUser);
+            UserManager.UpdateSelectedUser(SelectedUser);
         }
 
-        private void RefreshUsers()
+        private bool ValidateExportFormat()
         {
-            Users.Clear();
-            foreach (var user in _dataProvider.GetAllUsers())
+            if (SelectedFormat == default(ExportFormat))
             {
-                Users.Add(user);
+                MessageBox.Show("Please select an export format.", "Export Format Required", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
             }
+            return true;
         }
 
-        private string GenerateFileName() =>
+        private string GenerateFileName() => 
             $"Users.{SelectedFormat.ToString().ToLower()}".Replace(" ", "_");
 
-        private string GenerateFilter() =>
+        private string GenerateFilter() => 
             $"{SelectedFormat} files|*.{SelectedFormat.ToString().ToLower()}";
 
         public event PropertyChangedEventHandler? PropertyChanged;
