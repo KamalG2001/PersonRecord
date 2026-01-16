@@ -6,9 +6,11 @@ namespace PersonRecord.Models
     {
         public User()
         {
-
+            Id = Guid.NewGuid().ToString();
         }
-         private string? _name;
+        public string Id { get; set; } = string.Empty;
+
+        private string? _name;
          public string? Name
          {
             get => _name;
