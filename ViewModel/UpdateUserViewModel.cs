@@ -2,7 +2,6 @@
 using PersonRecord.Models;
 using System.ComponentModel;
 using System.Windows;
-using System.Linq;
 
 namespace PersonRecord.ViewModel
 {

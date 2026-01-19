@@ -41,8 +41,8 @@ namespace PersonRecord.ViewModel
             set { _job = value; OnPropertyChanged(nameof(Job)); }
         }
 
-        public ObservableCollection<User> Users { get; set; }
-        
+        public List<User> Users { get; set; }
+
         private User? _selectedUser;
         public User? SelectedUser
         {
@@ -91,25 +91,25 @@ namespace PersonRecord.ViewModel
         }
 
         private RelayCommand? _editUserDetailsCommand;
-        public RelayCommand EditUserDetailsCommand => 
+        public RelayCommand EditUserDetailsCommand =>
             _editUserDetailsCommand ??= new RelayCommand(EditUserDetails);
 
         private RelayCommand? _saveUserDetailsCommand;
-        public RelayCommand SaveUserDetailsCommand => 
+        public RelayCommand SaveUserDetailsCommand =>
             _saveUserDetailsCommand ??= new RelayCommand(SaveUserDetails);
 
         private RelayCommand? _openUserDetailsCommand;
-        public RelayCommand OpenUserDetailsCommand => 
+        public RelayCommand OpenUserDetailsCommand =>
             _openUserDetailsCommand ??= new RelayCommand(OpenUserDetails);
 
         public Array ExportFormats => System.Enum.GetValues(typeof(ExportFormat));
 
         private RelayCommand? _deleteSelectedUserCommand;
-        public RelayCommand DeleteSelectedUserCommand => 
+        public RelayCommand DeleteSelectedUserCommand =>
             _deleteSelectedUserCommand ??= new RelayCommand(DeleteSelectedUser, () => CanDeleteUser);
 
         private RelayCommand? _updateUserCommand;
-        public RelayCommand UpdateUserCommand => 
+        public RelayCommand UpdateUserCommand =>
             _updateUserCommand ??= new RelayCommand(UpdateUser, () => CanUpdateUser);
 
         private readonly IFileDialogService _dialogService;
@@ -156,7 +156,7 @@ namespace PersonRecord.ViewModel
             {
                 DataContext = new AddUserViewModel(_repository)
             };
-  
+
             addUserView.ShowDialog();
         }
 
@@ -175,26 +175,16 @@ namespace PersonRecord.ViewModel
 
         private void SaveUserDetails()
         {
-            if (!ValidateExportFormat())
-                return;
+            var exporter = _exporterFactory.CreateExporter(SelectedFormat);
+            var fileName = GenerateFileName();
+            var filter = GenerateFilter();
 
-            try
+            var filePath = _dialogService.SaveFile(filter, fileName);
+
+            if (filePath != null)
             {
-                var exporter = _exporterFactory.CreateExporter(SelectedFormat);
-                var fileName = GenerateFileName();
-                var filter = GenerateFilter();
-
-                var filePath = _dialogService.SaveFile(filter, fileName);
-
-                if (filePath != null)
-                {
-                    exporter.Export(Users.ToList(), filePath);
-                    MessageBox.Show($"Data exported successfully to:\n{filePath}", "Export Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error during export: {ex.Message}", "Export Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                exporter.Export(Users.ToList(), filePath);
+                MessageBox.Show($"Data exported successfully to:\n{filePath}", "Export Successful", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -205,18 +195,8 @@ namespace PersonRecord.ViewModel
                 MessageBox.Show("Please select a user", "No User Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            try
-            {
-                    _repository.DeleteUser(SelectedUser);
-                    UserManager.DeleteSelectedUser(SelectedUser);
-                    MessageBox.Show("User deleted successfully.", "Delete Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error deleting user: {ex.Message}", "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        
+            _repository.DeleteUser(SelectedUser);
+            UserManager.DeleteSelectedUser(SelectedUser);
         }
 
         private void UpdateUser()
@@ -232,25 +212,15 @@ namespace PersonRecord.ViewModel
                 DataContext = new UpdateUserViewModel(SelectedUser, _repository)
             };
             updateUserView.ShowDialog();
-            
+
             _repository.UpdateUser(SelectedUser);
             UserManager.UpdateSelectedUser(SelectedUser);
         }
 
-        private bool ValidateExportFormat()
-        {
-            if (SelectedFormat == default(ExportFormat))
-            {
-                MessageBox.Show("Please select an export format.", "Export Format Required", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            return true;
-        }
-
-        private string GenerateFileName() => 
+        private string GenerateFileName() =>
             $"Users.{SelectedFormat.ToString().ToLower()}".Replace(" ", "_");
 
-        private string GenerateFilter() => 
+        private string GenerateFilter() =>
             $"{SelectedFormat} files|*.{SelectedFormat.ToString().ToLower()}";
 
         public event PropertyChangedEventHandler? PropertyChanged;
