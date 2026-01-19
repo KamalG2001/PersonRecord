@@ -1,7 +1,8 @@
 using System.IO;
 using System.Text.Json;
+using PersonRecord.Models;
 
-namespace PersonRecord.Models
+namespace PersonRecord.JsonReader
 {
     public class JsonUserRepository : IUserRepository
     {
