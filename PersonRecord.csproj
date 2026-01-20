@@ -9,18 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="JsonReader\Users.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="JsonReader\Users.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="JsonReader\Users.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

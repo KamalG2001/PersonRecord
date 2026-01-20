@@ -1,5 +1,4 @@
 ﻿using PersonRecord.Models;
-using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using System.ComponentModel;
 
@@ -72,16 +71,6 @@ namespace PersonRecord.ViewModel
             var newUser = new User() { Name = Name, Surname = Surname, Age = Age, Job = Job };
             _repository.AddUser(newUser);
             UserManager.AddUser(newUser);   
-        }
-
-
-
-        private User? _originalUser;
-
-        public User? OriginalUser
-        {
-            get => _originalUser;
-            set => _originalUser = value;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -9,9 +9,7 @@ namespace PersonRecord.Export
         public void Export(List<User> people, string filePath)
         {
             var options = new JsonSerializerOptions() { WriteIndented = true };
-
             var json = JsonSerializer.Serialize(people, options);
-
             File.WriteAllText(filePath, json);
         }
     }

@@ -11,9 +11,9 @@ namespace PersonRecord.ViewModel
         private User _user;
         private readonly IUserRepository _repository;
 
-        private RelayCommand? _saveCommand;
-        public RelayCommand SaveCommand =>
-            _saveCommand ??= new RelayCommand(SaveUser);
+        private RelayCommand? _updateCommand;
+        public RelayCommand UpdateCommand =>
+            _updateCommand ??= new RelayCommand(UpdateUser);
 
         private RelayCommand? _cancelCommand;
         public RelayCommand CancelCommand =>
@@ -49,18 +49,9 @@ namespace PersonRecord.ViewModel
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        private void SaveUser()
+        private void UpdateUser()
         {
-            try
-            {
-                _repository.UpdateUser(_user);
-                MessageBox.Show("User updated successfully.", "Update Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                CloseWindow();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error updating user: {ex.Message}", "Update Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            _repository.UpdateUser(_user);
         }
 
         private void CancelEdit()

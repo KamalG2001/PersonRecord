@@ -6,10 +6,7 @@ namespace PersonRecord.Models
 {
     public class UserManager
     {
-        public static ObservableCollection<User> _DatabaseUsers = new ObservableCollection<User>() 
-        {
-
-        };
+        public static ObservableCollection<User> _DatabaseUsers = new ObservableCollection<User>();
         
 
         public static ObservableCollection<User> GetUsers()

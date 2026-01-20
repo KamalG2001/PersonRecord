@@ -15,7 +15,9 @@ namespace PersonRecord
         {
             InitializeComponent();
 
-            _repository = new JsonUserRepository();
+            _repository = new JsonUserRepository(); ///<< Use JSON
+            //_repository = new InMemoryUserRepository(); ///<< Use Memory
+
             var users = _repository.GetAllUsers();
 
             foreach (var user in users)
