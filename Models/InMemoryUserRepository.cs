@@ -24,17 +24,11 @@ namespace PersonRecord.FileReader
 
         public void AddUser(User user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user), "User cannot be null");
-
             _users.Add(user);
         }
 
         public void UpdateUser(User user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user), "User cannot be null");
-
             var existingUser = _users.FirstOrDefault(u => 
                 u.Name == user.Name && u.Surname == user.Surname);
 
@@ -49,9 +43,6 @@ namespace PersonRecord.FileReader
 
         public void DeleteUser(User user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user), "User cannot be null");
-
             var userToDelete = _users.FirstOrDefault(u => 
                 u.Name == user.Name && u.Surname == user.Surname);
 

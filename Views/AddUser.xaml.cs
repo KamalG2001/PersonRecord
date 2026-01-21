@@ -12,7 +12,7 @@ namespace PersonRecord.Views
         {
             InitializeComponent();
             _userRepository = userRepository;
-            AddUserViewModel addUserViewModel = new AddUserViewModel(_userRepository);
+            EditUserViewModel addUserViewModel = new EditUserViewModel(_userRepository);
             this.DataContext = addUserViewModel;
         }
     }

@@ -27,15 +27,7 @@ namespace PersonRecord
             DataContext = new MainViewModel(new FileDialogService(), _repository);
         }
 
-        private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            UserList.Items.Filter = FilterMethod;
-        }
 
-        private bool FilterMethod(object obj)
-        {
-            var user = (User)obj;
-            return user.Name.Contains(FilterTextBox.Text, StringComparison.OrdinalIgnoreCase);
-        }
+        
     }
 }

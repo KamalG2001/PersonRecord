@@ -154,7 +154,7 @@ namespace PersonRecord.ViewModel
         {
             var addUserView = new AddUser(_repository)
             {
-                DataContext = new AddUserViewModel(_repository)
+                DataContext = new EditUserViewModel(_repository)
             };
 
             addUserView.ShowDialog();
@@ -219,22 +219,12 @@ namespace PersonRecord.ViewModel
 
             var updateUserView = new UpdateUser
             {
-                DataContext = new UpdateUserViewModel(SelectedUser, _repository)
+                DataContext = new EditUserViewModel(SelectedUser, _repository)
             };
             updateUserView.ShowDialog();
 
             _repository.UpdateUser(SelectedUser);
             UserManager.UpdateSelectedUser(SelectedUser);
-        }
-
-        private bool ValidateExportFormat()
-        {
-            if (SelectedFormat == default(ExportFormat))
-            {
-                MessageBox.Show("Please select an export format.", "Export Format Required", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
-            return true;
         }
 
         private string GenerateFileName() =>
