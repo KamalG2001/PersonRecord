@@ -11,9 +11,9 @@ namespace PersonRecord.Views
         public AddUser(IUserRepository userRepository)
         {
             InitializeComponent();
-            _userRepository = userRepository;
-            EditUserViewModel addUserViewModel = new EditUserViewModel(_userRepository);
-            this.DataContext = addUserViewModel;
+            //_userRepository = userRepository;
+            //EditUserViewModel addUserViewModel = (_userRepository);
+            //this.DataContext = new EditUserViewModel(null);
         }
     }
 }

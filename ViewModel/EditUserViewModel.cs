@@ -113,10 +113,6 @@ namespace PersonRecord.ViewModel
         private RelayCommand _addUserCommand;
         public RelayCommand AddUserCommand => _addUserCommand ??= new RelayCommand(EditUser, () => CanAddUser);
 
-        private RelayCommand? _cancelCommand;
-        public RelayCommand CancelCommand =>
-            _cancelCommand ??= new RelayCommand(CancelEdit);
-
         private void EditUser()
         {
             if (_isEditMode)
@@ -139,11 +135,6 @@ namespace PersonRecord.ViewModel
                 UserManager.AddUser(newUser);
             }
 
-            CloseWindow();
-        }
-
-        private void CancelEdit()
-        {
             CloseWindow();
         }
 

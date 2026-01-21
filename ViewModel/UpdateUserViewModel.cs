@@ -15,10 +15,6 @@
 //        public RelayCommand UpdateCommand =>
 //            _updateCommand ??= new RelayCommand(UpdateUser);
 
-//        private RelayCommand? _cancelCommand;
-//        public RelayCommand CancelCommand =>
-//            _cancelCommand ??= new RelayCommand(CancelEdit);
-
 //        public string? Name
 //        {
 //            get => _user.Name;

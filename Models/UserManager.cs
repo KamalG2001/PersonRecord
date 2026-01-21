@@ -7,8 +7,11 @@ namespace PersonRecord.Models
     public class UserManager
     {
         public static ObservableCollection<User> _DatabaseUsers = new ObservableCollection<User>();
-        
 
+        /// <summary>
+        /// view-> service-> repository/// interface userservice /// folder restructure
+        /// </summary>
+        /// <returns></returns>
         public static ObservableCollection<User> GetUsers()
         {
             return _DatabaseUsers;

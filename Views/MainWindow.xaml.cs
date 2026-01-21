@@ -15,6 +15,7 @@ namespace PersonRecord
         {
             InitializeComponent();
 
+            //DI Container (Ninject, Autofac)
             _repository = new JsonUserRepository(); ///<< Use JSON
             //_repository = new InMemoryUserRepository(); ///<< Use Memory
 
