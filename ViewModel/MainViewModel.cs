@@ -1,8 +1,9 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using PersonRecord.Export;
-using PersonRecord.FileReader;
 using PersonRecord.Models;
 using PersonRecord.Models.Enum;
+using PersonRecord.Repos;
+using PersonRecord.Services;
 using PersonRecord.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -114,16 +115,18 @@ namespace PersonRecord.ViewModel
 
         private readonly IFileDialogService _dialogService;
         private readonly IUserRepository _repository;
+        private readonly UserManager _userService;
         private readonly IExporterFactory _exporterFactory;
 
         public RelayCommand OpenFileCommand { get; }
 
-        public MainViewModel(IFileDialogService dialogService, IUserRepository repository)
+        public MainViewModel(IFileDialogService dialogService, IUserRepository repository, IUserService userService)
         {
-            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _dialogService = dialogService;
+            _repository = repository;
+            _userService = (UserManager?)userService;
             _exporterFactory = new ExporterFactory();
-            Users = UserManager.GetUsers();
+            Users = _userService.GetUsers();
             OpenFileCommand = new RelayCommand(OpenFile);
         }
 
@@ -152,9 +155,9 @@ namespace PersonRecord.ViewModel
 
         private void EditUserDetails()
         {
-            var addUserView = new AddUser(_repository)
+            var addUserView = new AddUser(_repository, _userService)
             {
-                DataContext = new EditUserViewModel(_repository)
+                DataContext = new EditUserViewModel(_repository, _userService)
             };
 
             addUserView.ShowDialog();
@@ -162,7 +165,7 @@ namespace PersonRecord.ViewModel
 
         private void OpenUserDetails()
         {
-            ShowWindow(new AddUser(_repository));
+            ShowWindow(new AddUser(_repository, _userService));
         }
 
         private void ShowWindow(Window window)
@@ -199,14 +202,12 @@ namespace PersonRecord.ViewModel
 
             try
             {
-                _repository.DeleteUser(SelectedUser);
-                UserManager.DeleteSelectedUser(SelectedUser);
+                _userService.DeleteSelectedUser(SelectedUser);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error deleting user: {ex.Message}", "Delete Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         private void UpdateUser()
@@ -223,8 +224,7 @@ namespace PersonRecord.ViewModel
             };
             updateUserView.ShowDialog();
 
-            _repository.UpdateUser(SelectedUser);
-            UserManager.UpdateSelectedUser(SelectedUser);
+            _userService.UpdateSelectedUser(SelectedUser);
         }
 
         private string GenerateFileName() =>

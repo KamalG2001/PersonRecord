@@ -1,4 +1,6 @@
-namespace PersonRecord.Models
+using PersonRecord.Models;
+
+namespace PersonRecord.Repos
 {
     public interface IUserRepository
     {

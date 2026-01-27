@@ -1,4 +1,4 @@
-﻿namespace PersonRecord.FileReader
+﻿namespace PersonRecord.Services
 {
     public interface IFileDialogService
     {

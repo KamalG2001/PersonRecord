@@ -1,36 +1,51 @@
-﻿using System.Collections.ObjectModel;
+﻿using PersonRecord.Repos;
+using PersonRecord.Services;
+using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.System;
 
 namespace PersonRecord.Models
 {
-    public class UserManager
+    public class UserManager : IUserService
     {
-        public static ObservableCollection<User> _DatabaseUsers = new ObservableCollection<User>();
+        private readonly IUserRepository _repository;
+        private readonly ObservableCollection<User> _databaseUsers;
 
-        /// <summary>
-        /// view-> service-> repository/// interface userservice /// folder restructure
-        /// </summary>
-        /// <returns></returns>
-        public static ObservableCollection<User> GetUsers()
+        public UserManager(IUserRepository repository)
         {
-            return _DatabaseUsers;
+            _repository = repository;
+            _databaseUsers = new ObservableCollection<User>();
+            
+            // Load initial data from repository
+            var users = _repository.GetAllUsers();
+            foreach (var user in users)
+            {
+                _databaseUsers.Add(user);
+            }
         }
 
-        public static void AddUser(User user)
+        public ObservableCollection<User> GetUsers()
         {
-            _DatabaseUsers.Add(user);
+            return _databaseUsers;
         }
 
-        public static void DeleteSelectedUser(User user)
+        public void AddUser(User user)
+        {
+            _databaseUsers.Add(user);
+            _repository.AddUser(user);
+        }
+
+        public void DeleteSelectedUser(User user)
         {
             if (user != null)
-                _DatabaseUsers.Remove(user);
+            {
+                _databaseUsers.Remove(user);
+                _repository.DeleteUser(user);
+            }
         }
 
-        public static void UpdateSelectedUser(User user)
+        public void UpdateSelectedUser(User user)
         {
-            var existingUser = _DatabaseUsers.FirstOrDefault(u =>
+            var existingUser = _databaseUsers.FirstOrDefault(u =>
                 u.Name == user.Name && u.Surname == user.Surname);
             
             if (existingUser != null)
@@ -39,6 +54,7 @@ namespace PersonRecord.Models
                 existingUser.Surname = user.Surname;
                 existingUser.Age = user.Age;
                 existingUser.Job = user.Job;
+                _repository.UpdateUser(user);
             }
         }
     }

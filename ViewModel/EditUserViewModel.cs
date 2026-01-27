@@ -3,6 +3,8 @@ using GalaSoft.MvvmLight.Command;
 using System.ComponentModel;
 using System.Windows;
 using System.Linq;
+using PersonRecord.Repos;
+using PersonRecord.Services;
 
 namespace PersonRecord.ViewModel
 {
@@ -10,12 +12,14 @@ namespace PersonRecord.ViewModel
     {
         private User? _user;
         private readonly IUserRepository _repository;
+        private readonly IUserService? _userService;
         private readonly bool _isEditMode;
         
         // Adds user
-        public EditUserViewModel(IUserRepository repository)
+        public EditUserViewModel(IUserRepository repository, IUserService userService)
         {
             _repository = repository;
+            _userService = userService;
             _isEditMode = false;
             _user = null;
         }
@@ -25,6 +29,7 @@ namespace PersonRecord.ViewModel
         {
             _user = user;
             _repository = repository;
+            _userService = null;
             _isEditMode = true;
         }
 
@@ -131,8 +136,9 @@ namespace PersonRecord.ViewModel
                     Age = _age,
                     Job = _job
                 };
-                _repository.AddUser(newUser);
-                UserManager.AddUser(newUser);
+                
+                // Use IUserService to add user so it appears in ObservableCollection
+                _userService?.AddUser(newUser);
             }
 
             CloseWindow();

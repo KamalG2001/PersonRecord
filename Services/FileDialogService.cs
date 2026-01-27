@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace PersonRecord.FileReader
+namespace PersonRecord.Services
 {
     public class FileDialogService : IFileDialogService
     {

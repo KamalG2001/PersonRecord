@@ -1,34 +1,28 @@
-﻿using PersonRecord.FileReader;
-using PersonRecord.JsonReader;
-using PersonRecord.Models;
+﻿using Autofac;
+using PersonRecord.Repos;
+using PersonRecord.Services;
 using PersonRecord.ViewModel;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace PersonRecord
 {
     public partial class MainWindow : Window
     {
-        private IUserRepository _repository;
+        private readonly IContainer _container;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            //DI Container (Ninject, Autofac)
-            _repository = new JsonUserRepository(); ///<< Use JSON
-            //_repository = new InMemoryUserRepository(); ///<< Use Memory
+            // DI container Autofac setup
+            _container = ContainerSetup.BuildContainer();  // Uses default configuration
 
-            var users = _repository.GetAllUsers();
+            // Resolve services from container
+            var userService = _container.Resolve<IUserService>();
+            var repository = _container.Resolve<IUserRepository>();
+            var dialogService = _container.Resolve<IFileDialogService>();
 
-            foreach (var user in users)
-            {
-                UserManager.AddUser(user);
-            }
-            DataContext = new MainViewModel(new FileDialogService(), _repository);
+            DataContext = new MainViewModel(dialogService, repository, userService);
         }
-
-
-        
     }
 }

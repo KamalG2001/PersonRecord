@@ -1,6 +1,6 @@
 using PersonRecord.Models;
 
-namespace PersonRecord.FileReader
+namespace PersonRecord.Repos
 {
     public class InMemoryUserRepository : IUserRepository
     {
@@ -31,9 +31,6 @@ namespace PersonRecord.FileReader
         {
             var existingUser = _users.FirstOrDefault(u => 
                 u.Name == user.Name && u.Surname == user.Surname);
-
-            if (existingUser == null)
-                throw new InvalidOperationException($"User {user.Name} {user.Surname} not found");
 
             existingUser.Name = user.Name;
             existingUser.Surname = user.Surname;
